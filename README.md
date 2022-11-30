@@ -54,7 +54,7 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 ```
-* 1 Default Gateway
+* 1 Default Route Table
 ```terraform
 resource "aws_default_route_table" "defaultR" {
   default_route_table_id = aws_vpc.vpc1.default_route_table_id
@@ -81,6 +81,7 @@ resource "aws_eks_cluster" "Cluster_Obligatorio" {
 }
 ```
 * 1 Grupo de nodos
+En este grupo se van a desplegar instancias de EC2 tipo t3.large para poder al
 ```terraform
 resource "aws_eks_node_group" "GrupoNodos" {
   cluster_name  = aws_eks_cluster.Cluster_Obligatorio.name
@@ -102,3 +103,7 @@ resource "aws_eks_node_group" "GrupoNodos" {
 ## _Servicios AWS usados_
 
 ## _GIF de desmostración_
+
+![2022-11-30 01-02-02](https://user-images.githubusercontent.com/69463751/204705273-e9e88c84-b6cc-4bbb-8750-fc208b6ca2ee.gif)
+
+
