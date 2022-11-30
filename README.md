@@ -3,9 +3,9 @@
 ## _Diagrama_ 
 
 
-##_Datos de la infraestructura_
+## _Datos de la infraestructura_
 
 
-##_Servicios AWS usados
+## _Servicios AWS usados_
 
-##_GIF de desmostración
+## _GIF de desmostración_
