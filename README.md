@@ -1,6 +1,7 @@
 # **Detalles de la Arquitectura**
 
 ## _Diagrama_ 
+![Infraestructura Cloud drawio](https://user-images.githubusercontent.com/69463751/204718183-b4d507ed-0c38-4d2d-b509-9554703a94ea.png)
 
 
 ## _Datos de la infraestructura_
