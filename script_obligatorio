@@ -1,0 +1,126 @@
+#!/bin/bash
+
+
+cd terraform
+terraform apply
+cd ..
+
+aws eks --region us-east-1 update-kubeconfig --name Cluster_Obligatorio
+
+sudo docker build -t checkout-service:v1 /home/ec2-user/repos/online-boutique/src/checkoutservice
+sudo docker tag checkout-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:checkoutservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:checkoutservice
+sudo docker rmi --force $(sudo docker images | grep "checkoutservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t email-service:v1 /home/ec2-user/repos/online-boutique/src/emailservice
+sudo docker tag email-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:emailservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:emailservice
+sudo docker rmi --force $(sudo docker images | grep "emailservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t load-generator:v1 /home/ec2-user/repos/online-boutique/src/loadgenerator
+sudo docker tag load-generator:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:loadgenerator
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:loadgenerator
+sudo docker rmi --force $(sudo docker images | grep "loadgenerator" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+sudo docker build -t product_catalog-service:v1 /home/ec2-user/repos/online-boutique/src/productcatalogservice
+sudo docker tag product_catalog-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:productcatalogservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:productcatalogservice
+sudo docker rmi --force $(sudo docker images | grep "productcatalogservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t cart-service:v1 /home/ec2-user/repos/online-boutique/src/cartservice/src
+sudo docker tag cart-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:cartservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:cartservice
+sudo docker rmi --force $(sudo docker images | grep "cartservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t currency-service:v1 /home/ec2-user/repos/online-boutique/src/currencyservice
+sudo docker tag currency-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:currencyservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:currencyservice
+sudo docker rmi --force $(sudo docker images | grep "currencyservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t front-end:v1 /home/ec2-user/repos/online-boutique/src/frontend
+sudo docker tag front-end:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:frontend
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:frontend
+sudo docker rmi --force $(sudo docker images | grep "frontend" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t payment-service:v1 /home/ec2-user/repos/online-boutique/src/paymentservice
+sudo docker tag payment-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:paymentservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:paymentservice
+sudo docker rmi --force $(sudo docker images | grep "paymentservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t recommendation_service:v1 /home/ec2-user/repos/online-boutique/src/recommendationservice
+sudo docker tag recommendation_service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:recommendationservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:recommendationservice
+sudo docker rmi --force $(sudo docker images | grep "recommendationservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+
+sudo docker build -t shipping-service:v1 /home/ec2-user/repos/online-boutique/src/shippingservice
+sudo docker tag shipping-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:shippingservice
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:shippingservice
+sudo docker rmi --force $(sudo docker images | grep "shippingservice" | awk {'print $3'})
+
+sudo docker build -t ad-service:v1 /home/ec2-user/repos/online-boutique/src/adservice
+sudo docker tag ad-service:v1 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:ad-service
+sudo docker push 344673621854.dkr.ecr.us-east-1.amazonaws.com/eshopapp:ad-service
+sudo docker rmi --force $(sudo docker images | grep "adservice" | awk {'print $3'})
+sudo docker rm $(sudo docker ps -aq)
+sudo docker rmi $(sudo docker images -q)
+
+while [[ $(kubectl get nodes | awk {'print $2'} | head -2 | tail -1) != "Ready" || $(kubectl get nodes | awk {'print $2'} | head -2 | tail -1) != "Ready" ]];do
+echo "Los nodos no estan listos..."
+sleep 10
+done
+
+
+
+kubectl create -f online-boutique/src/redis/deployment/kubernetes-manifests.yaml
+sleep 60
+
+kubectl create -f online-boutique/src/adservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/checkoutservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/emailservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/loadgenerator/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/productcatalogservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/cartservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/currencyservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/frontend/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/paymentservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/recommendationservice/deployment/kubernetes-manifests.yaml
+kubectl create -f online-boutique/src/shippingservice/deployment/kubernetes-manifests.yaml
+
+kubectl scale --replicas=2 deployment/adservice
+kubectl scale --replicas=2 deployment/paymentservice
+kubectl scale --replicas=2 deployment/shippingservice
+kubectl scale --replicas=2 deployment/currencyservice
+kubectl scale --replicas=2 deployment/checkoutservice
+kubectl scale --replicas=2 deployment/emailservice
+kubectl scale --replicas=2 deployment/loadgenerator
+kubectl scale --replicas=2 deployment/productcatalogue
+kubectl scale --replicas=2 deployment/cartservice
+kubectl scale --replicas=2 deployment/frontend
+kubectl scale --replicas=2 deployment/recommendationservice
+kubectl scale --replicas=2 deployment/redis-cart
