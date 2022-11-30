@@ -102,6 +102,11 @@ resource "aws_eks_node_group" "GrupoNodos" {
 
 ## _Servicios AWS usados_
 
+* EC2
+* VPC
+* EKS
+* ECR
+
 ## _GIF de desmostración_
 
 Acceso a la pagina web
